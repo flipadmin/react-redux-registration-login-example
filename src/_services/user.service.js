@@ -12,22 +12,32 @@ export const userService = {
   test
 };
 
-function test() {
+function test(username, password) {
+  console.log(username, password);
   const requestOptions = {
-    method: "GET",
-    headers: { "Content-Type": "application/json" }
-    // body: JSON.stringify({ username, password })
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
   };
-  const url = "/cs_admin_api/test_react";
-  // const url = "https://randomuser.me/api/?results=10";
+  const url = "/cs_admin_api/test_post_react";
 
-  return fetch(url)
-    .then(function(data) {
+  fetch(url, requestOptions)
+    // .then(response => {
+    //   return response.json();
+    // })
+    .then(data => {
       console.log(data);
     })
-    .catch(function(error) {
-      console.log(error);
+    .catch(err => {
+      console.log(err);
     });
+  // return fetch(url)
+  //   .then(function(data) {
+  //     console.log(data);
+  //   })
+  //   .catch(function(error) {
+  //     console.log(error);
+  //   });
 }
 
 function login(username, password) {

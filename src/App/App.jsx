@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
+import { Router, HashRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { history } from "../_helpers";
@@ -8,6 +8,28 @@ import { PrivateRoute } from "../_components";
 import { HomePage } from "../HomePage";
 import { LoginPage } from "../LoginPage";
 import { RegisterPage } from "../RegisterPage";
+
+function withBaseFix(HashRouter) {
+  return class extends React.Component {
+    constructor() {
+      super();
+      this.baseElement = document.querySelector("base");
+      if (this.baseElement) {
+        this.baseHref = this.baseElement.getAttribute("href");
+        this.baseElement.setAttribute("href", "");
+      }
+    }
+
+    render() {
+      return <HashRouter {...this.props}>{this.props.children}</HashRouter>;
+    }
+
+    componentDidMount() {
+      if (this.baseElement)
+        this.baseElement.setAttribute("href", this.baseHref);
+    }
+  };
+}
 
 class App extends React.Component {
   constructor(props) {
@@ -22,6 +44,7 @@ class App extends React.Component {
 
   render() {
     const { alert } = this.props;
+    const FixedHashRouter = withBaseFix(HashRouter);
     return (
       <div className="jumbotron">
         <div className="container">
@@ -29,13 +52,13 @@ class App extends React.Component {
             {alert.message && (
               <div className={`alert ${alert.type}`}>{alert.message}</div>
             )}
-            <HashRouter history={history}>
+            <FixedHashRouter history={history}>
               <div>
                 <PrivateRoute exact path="/" component={HomePage} />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/register" component={RegisterPage} />
               </div>
-            </HashRouter>
+            </FixedHashRouter>
           </div>
         </div>
       </div>
