@@ -22,11 +22,11 @@ function test(username, password) {
   const url = "/cs_admin_api/test_post_react";
 
   fetch(url, requestOptions)
-    // .then(response => {
-    //   return response.json();
-    // })
+    .then(response => {
+      return response.json();
+    })
     .then(data => {
-      console.log(data);
+      console.log(data["username"]);
     })
     .catch(err => {
       console.log(err);
