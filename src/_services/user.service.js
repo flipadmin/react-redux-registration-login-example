@@ -22,15 +22,24 @@ function test(username, password) {
   const url = "/cs_admin_api/test_post_react";
 
   fetch(url, requestOptions)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      console.log(data["username"]);
-    })
-    .catch(err => {
-      console.log(err);
+    .then(handleResponse)
+    .then(user_data => {
+      console.log(user_data);
+      if (user_data.new_token) {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem("new_user", JSON.stringify(user_data.username));
+      }
     });
+  // .then(response => {
+  //   return response.json();
+  // })
+  // .then(data => {
+  //   console.log(data["username"]);
+  //   console.log(data["new_token"]);
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // });
   // return fetch(url)
   //   .then(function(data) {
   //     console.log(data);
