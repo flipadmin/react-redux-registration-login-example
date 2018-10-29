@@ -27,7 +27,7 @@ function test(username, password) {
       console.log(user_data);
       if (user_data.new_token) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem("new_user", JSON.stringify(user_data.username));
+        localStorage.setItem("user", JSON.stringify(user_data.username));
       }
     });
   // .then(response => {
@@ -55,14 +55,15 @@ function login(username, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
   };
+  const url = "/cs_admin_api/test_post_react";
 
-  return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
+  return fetch(url, requestOptions)
     .then(handleResponse)
     .then(user => {
       // login successful if there's a jwt token in the response
-      if (user.token) {
+      if (user.new_token) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(user.username));
       }
 
       return user;
@@ -79,8 +80,8 @@ function getAll() {
     method: "GET",
     headers: authHeader()
   };
-
-  return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+  const url = "/cs_admin_api/test_react";
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function getById(id) {

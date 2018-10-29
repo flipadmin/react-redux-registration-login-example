@@ -8,6 +8,7 @@ import { PrivateRoute } from "../_components";
 import { HomePage } from "../HomePage";
 import { LoginPage } from "../LoginPage";
 import { RegisterPage } from "../RegisterPage";
+import { NavBar } from "../NavBar";
 
 function withBaseFix(HashRouter) {
   return class extends React.Component {
