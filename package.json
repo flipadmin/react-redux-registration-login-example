@@ -7,7 +7,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server  --open --port 8180 --host cs-admin.local.rewardsmatrix.com"
   },
   "dependencies": {
     "history": "^4.6.3",

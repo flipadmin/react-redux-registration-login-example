@@ -1,54 +1,81 @@
-import React from 'react';
-import { Router, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React from "react";
+import { Router, HashRouter, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
-import { history } from '../_helpers';
-import { alertActions } from '../_actions';
-import { PrivateRoute } from '../_components';
-import { HomePage } from '../HomePage';
-import { LoginPage } from '../LoginPage';
-import { RegisterPage } from '../RegisterPage';
+import { history } from "../_helpers";
+import { alertActions } from "../_actions";
+import { PrivateRoute } from "../_components";
+import { HomePage } from "../HomePage";
+import { LoginPage } from "../LoginPage";
+import { RegisterPage } from "../RegisterPage";
+import { WalletPage } from "../WalletPage";
+import { NavBar } from "../NavBar";
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-
-        const { dispatch } = this.props;
-        history.listen((location, action) => {
-            // clear alert on location change
-            dispatch(alertActions.clear());
-        });
+function withBaseFix(HashRouter) {
+  return class extends React.Component {
+    constructor() {
+      super();
+      this.baseElement = document.querySelector("base");
+      if (this.baseElement) {
+        this.baseHref = this.baseElement.getAttribute("href");
+        this.baseElement.setAttribute("href", "");
+      }
     }
 
     render() {
-        const { alert } = this.props;
-        return (
-            <div className="jumbotron">
-                <div className="container">
-                    <div className="col-sm-8 col-sm-offset-2">
-                        {alert.message &&
-                            <div className={`alert ${alert.type}`}>{alert.message}</div>
-                        }
-                        <Router history={history}>
-                            <div>
-                                <PrivateRoute exact path="/" component={HomePage} />
-                                <Route path="/login" component={LoginPage} />
-                                <Route path="/register" component={RegisterPage} />
-                            </div>
-                        </Router>
-                    </div>
-                </div>
-            </div>
-        );
+      return <HashRouter {...this.props}>{this.props.children}</HashRouter>;
     }
+
+    componentDidMount() {
+      if (this.baseElement)
+        this.baseElement.setAttribute("href", this.baseHref);
+    }
+  };
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    const { dispatch } = this.props;
+    history.listen((location, action) => {
+      // clear alert on location change
+      dispatch(alertActions.clear());
+    });
+  }
+
+  render() {
+    const { alert } = this.props;
+    const FixedHashRouter = withBaseFix(HashRouter);
+    return (
+      <FixedHashRouter history={history}>
+        <div>
+          <NavBar />
+          <div className="jumbotron">
+            <div className="container">
+              <div className="col-sm-8 col-sm-offset-2">
+                {alert.message && (
+                  <div className={`alert ${alert.type}`}>{alert.message}</div>
+                )}
+                <PrivateRoute exact path="/" component={HomePage} />
+                <Route path="/login" component={LoginPage} />
+                <Route path="/register" component={RegisterPage} />
+                <Route path="/wallet_page" component={WalletPage} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </FixedHashRouter>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    const { alert } = state;
-    return {
-        alert
-    };
+  const { alert } = state;
+  return {
+    alert
+  };
 }
 
 const connectedApp = connect(mapStateToProps)(App);
-export { connectedApp as App }; 
+export { connectedApp as App };
