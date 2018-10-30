@@ -8,6 +8,7 @@ import { PrivateRoute } from "../_components";
 import { HomePage } from "../HomePage";
 import { LoginPage } from "../LoginPage";
 import { RegisterPage } from "../RegisterPage";
+import { WalletPage } from "../WalletPage";
 import { NavBar } from "../NavBar";
 
 function withBaseFix(HashRouter) {
@@ -47,22 +48,24 @@ class App extends React.Component {
     const { alert } = this.props;
     const FixedHashRouter = withBaseFix(HashRouter);
     return (
-      <div className="jumbotron">
-        <div className="container">
-          <div className="col-sm-8 col-sm-offset-2">
-            {alert.message && (
-              <div className={`alert ${alert.type}`}>{alert.message}</div>
-            )}
-            <FixedHashRouter history={history}>
-              <div>
+      <FixedHashRouter history={history}>
+        <div>
+          <NavBar />
+          <div className="jumbotron">
+            <div className="container">
+              <div className="col-sm-8 col-sm-offset-2">
+                {alert.message && (
+                  <div className={`alert ${alert.type}`}>{alert.message}</div>
+                )}
                 <PrivateRoute exact path="/" component={HomePage} />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/register" component={RegisterPage} />
+                <Route path="/wallet_page" component={WalletPage} />
               </div>
-            </FixedHashRouter>
+            </div>
           </div>
         </div>
-      </div>
+      </FixedHashRouter>
     );
   }
 }
