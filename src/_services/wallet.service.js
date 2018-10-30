@@ -1,5 +1,6 @@
 import config from "config";
 import { authHeader } from "../_helpers";
+import { wallet_lines } from "../_reducers/wallet.reducer";
 
 export const walletService = {
   get_lines
@@ -16,13 +17,18 @@ function get_lines(external_id, company_id) {
 
   fetch(url, requestOptions)
     .then(handleResponse)
-    .then(user_data => {
-      console.log(user_data);
-      if (user_data) {
+    .then(wallet_lines => {
+      console.log(wallet_lines);
+      if (wallet_lines) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem("wallet_test", JSON.stringify(user_data));
+        localStorage.setItem("wallet_test", JSON.stringify(wallet_lines));
       }
     });
+}
+
+function logout() {
+  // remove user from local storage to log user out
+  localStorage.removeItem("user");
 }
 
 function handleResponse(response) {

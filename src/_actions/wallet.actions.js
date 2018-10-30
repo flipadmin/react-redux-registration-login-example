@@ -1,7 +1,7 @@
 import { walletConstants } from "../_constants";
 import { userService } from "../_services";
 import { walletService } from "../_services";
-import { alertActions } from "./";
+import { alertActions } from ".";
 import { history } from "../_helpers";
 
 export const walletActions = {
@@ -10,13 +10,13 @@ export const walletActions = {
 
 function get_lines(external_id, company_id) {
   return dispatch => {
-    dispatch(request({ external_id }));
+    dispatch(request(external_id));
 
     walletService.get_lines(external_id, company_id).then(
-      user => {
-        console.log("This is my USER --------");
-        console.log(user);
-        dispatch(success(user));
+      external_id => {
+        console.log("This is my LINES --------");
+        console.log(external_id);
+        dispatch(success(external_id));
         history.push("/wallet_page");
       },
       error => {

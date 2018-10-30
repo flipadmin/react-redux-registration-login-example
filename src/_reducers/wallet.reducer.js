@@ -4,11 +4,12 @@ export function wallet_lines(state = {}, action) {
   switch (action.type) {
     case walletConstants.LINES_REQUEST:
       return {
-        loading: true
+        gettingLines: true
       };
     case walletConstants.LINES_SUCCESS:
       return {
-        items: action.lines
+        // lines: action.lines
+        loaded: true
       };
     case walletConstants.LINES_FAILURE:
       return {
