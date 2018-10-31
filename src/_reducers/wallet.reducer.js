@@ -1,15 +1,23 @@
 import { walletConstants } from "../_constants";
 
-export function wallet_lines(state = {}, action) {
+const initialState = {
+  items: [],
+  gettingLines: false,
+  loaded: false
+};
+
+export function wallet_lines(state = initialState, action) {
   switch (action.type) {
     case walletConstants.LINES_REQUEST:
       return {
-        gettingLines: true
+        gettingLines: true,
+        items: action.data
       };
     case walletConstants.LINES_SUCCESS:
       return {
         // lines: action.lines
-        loaded: true
+        loaded: true,
+        items: action.data
       };
     case walletConstants.LINES_FAILURE:
       return {

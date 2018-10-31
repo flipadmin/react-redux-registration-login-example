@@ -8,46 +8,8 @@ export const userService = {
   getAll,
   getById,
   update,
-  delete: _delete,
-  test
+  delete: _delete
 };
-
-function test(username, password) {
-  console.log(username, password);
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
-  };
-  const url = "/cs_admin_api/test_post_react";
-
-  fetch(url, requestOptions)
-    .then(handleResponse)
-    .then(user_data => {
-      console.log(user_data);
-      if (user_data.new_token) {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem("user", JSON.stringify(user_data.username));
-      }
-    });
-  // .then(response => {
-  //   return response.json();
-  // })
-  // .then(data => {
-  //   console.log(data["username"]);
-  //   console.log(data["new_token"]);
-  // })
-  // .catch(err => {
-  //   console.log(err);
-  // });
-  // return fetch(url)
-  //   .then(function(data) {
-  //     console.log(data);
-  //   })
-  //   .catch(function(error) {
-  //     console.log(error);
-  //   });
-}
 
 function login(username, password) {
   const requestOptions = {
@@ -64,6 +26,7 @@ function login(username, password) {
       if (user.new_token) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem("user", JSON.stringify(user.username));
+        localStorage.setItem("token", JSON.stringify(user.new_token));
       }
 
       return user;
@@ -144,7 +107,6 @@ function handleResponse(response) {
       const error = (data && data.message) || response.statusText;
       return Promise.reject(error);
     }
-
     return data;
   });
 }

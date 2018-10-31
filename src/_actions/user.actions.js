@@ -8,37 +8,8 @@ export const userActions = {
   logout,
   register,
   getAll,
-  delete: _delete,
-  test
+  delete: _delete
 };
-
-function test(username, password) {
-  return dispatch => {
-    dispatch(request({ username }));
-
-    userService.test(username, password).then(
-      user => {
-        dispatch(success(user));
-      },
-      error => {
-        dispatch(failure(error.toString()));
-        dispatch(alertActions.error(error.toString()));
-      }
-    );
-  };
-  function request(user) {
-    return { type: userConstants.LOGIN_REQUEST, user };
-  }
-  function success(user) {
-    return { type: userConstants.LOGIN_SUCCESS, user };
-  }
-  function failure(error) {
-    return { type: userConstants.LOGIN_FAILURE, error };
-  }
-}
-//   userService.test(username, password);
-//   return { type: userConstants.TEST };
-// }
 
 function login(username, password) {
   return dispatch => {

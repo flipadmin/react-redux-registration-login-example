@@ -29,7 +29,7 @@ class WalletPage extends React.Component {
     this.setState({ submitted: true });
     const { external_id, company_id } = this.state;
     const { dispatch } = this.props;
-    if (external_id) {
+    if (external_id && company_id) {
       dispatch(walletActions.get_lines(external_id, company_id));
     }
   }
@@ -78,17 +78,6 @@ class WalletPage extends React.Component {
               <option value="RewardsMatrix">RewardsMatrix</option>
               <option value="SportNation">SportNation</option>
             </select>
-            {/* <input
-              type="text"
-              className="form-control"
-              name="company_id"
-              value={company_id}
-              onChange={this.handleChange}
-            />
-            {submitted &&
-              !company_id && (
-                <div className="help-block">Company ID is required</div>
-              )} */}
           </div>
           <div className="form-group">
             <button className="btn btn-primary">Submit</button>
