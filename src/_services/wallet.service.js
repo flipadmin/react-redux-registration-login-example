@@ -7,11 +7,13 @@ export const walletService = {
 };
 
 function get_lines(external_id, company_id) {
-  console.log({ external_id, company_id });
+  let user_sub = JSON.parse(localStorage.getItem("user"));
+  let new_token = JSON.parse(localStorage.getItem("new_token"));
+  console.log({ user_sub, new_token });
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ external_id, company_id })
+    body: JSON.stringify({ user_sub, new_token, external_id, company_id })
   };
   const url = "/cs_admin_api/test_react";
 
@@ -26,7 +28,7 @@ function get_lines(external_id, company_id) {
   //   return data;
   // });
   const getTodo = async () => {
-    const res = await fetch(url);
+    const res = await fetch(url, requestOptions);
     const handle = await handleResponse(res);
     return handle;
     // const { timer, power } = await res.json();

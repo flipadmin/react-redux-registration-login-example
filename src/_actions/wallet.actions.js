@@ -17,9 +17,9 @@ function get_lines(external_id, company_id) {
       try {
         const res = await walletService.get_lines(external_id, company_id);
         console.log({ res });
-        const { timer } = await res;
-        if (timer) {
-          const succes = await dispatch(success(timer));
+        const { new_token } = await res;
+        if (new_token) {
+          const succes = await dispatch(success(new_token));
         }
       } catch (error) {
         console.log(error);

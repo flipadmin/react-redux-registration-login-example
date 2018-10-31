@@ -1,12 +1,6 @@
 import { walletConstants } from "../_constants";
 
-const initialState = {
-  items: [],
-  gettingLines: false,
-  loaded: false
-};
-
-export function wallet_lines(state = initialState, action) {
+export function wallet_lines(state = {}, action) {
   switch (action.type) {
     case walletConstants.LINES_REQUEST:
       return {

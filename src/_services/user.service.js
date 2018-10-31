@@ -26,7 +26,7 @@ function login(username, password) {
       if (user.new_token) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem("user", JSON.stringify(user.username));
-        localStorage.setItem("token", JSON.stringify(user.new_token));
+        localStorage.setItem("new_token", JSON.stringify(user.new_token));
       }
 
       return user;
@@ -43,7 +43,7 @@ function getAll() {
     method: "GET",
     headers: authHeader()
   };
-  const url = "/cs_admin_api/test_react";
+  const url = "https://jsonplaceholder.typicode.com/todos/1";
   return fetch(url, requestOptions).then(handleResponse);
 }
 
