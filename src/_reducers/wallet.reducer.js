@@ -4,18 +4,26 @@ export function wallet_lines(state = {}, action) {
   switch (action.type) {
     case walletConstants.LINES_REQUEST:
       return {
-        gettingLines: true,
-        items: action.data
+        gettingLines: true
       };
     case walletConstants.LINES_SUCCESS:
       return {
         // lines: action.lines
         loaded: true,
-        items: action.data
+        items: action.wallet_lines,
+        external_user_sub: action.external_user_sub
       };
     case walletConstants.LINES_FAILURE:
       return {
         error: action.error
+      };
+    case walletConstants.CHARGE_REQUEST:
+      return {
+        chargingLines: true
+      };
+    case walletConstants.CHARGE_SUCCESS:
+      return {
+        items: action.wallet_lines
       };
     default:
       return state;

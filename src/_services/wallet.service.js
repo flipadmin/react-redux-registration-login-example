@@ -3,7 +3,8 @@ import { authHeader } from "../_helpers";
 import { wallet_lines } from "../_reducers/wallet.reducer";
 
 export const walletService = {
-  get_lines
+  get_lines,
+  charge
 };
 
 function get_lines(external_id, company_id) {
@@ -15,24 +16,35 @@ function get_lines(external_id, company_id) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_sub, new_token, external_id, company_id })
   };
-  const url = "/cs_admin_api/test_react";
-
-  // fetch(url).then(handleResponse);
-  // .then(data => {
-  //   if (data) {
-  //     // store user details and jwt token in local storage to keep user logged in between page refreshes
-  //     localStorage.setItem("wallet_test", JSON.stringify(data));
-  //   }
-  //   console.log("I didf not get here");
-  //   console.log({ data });
-  //   return data;
-  // });
+  const url = "/cs_admin_api/get_wallet_lines";
   const getTodo = async () => {
     const res = await fetch(url, requestOptions);
     const handle = await handleResponse(res);
     return handle;
-    // const { timer, power } = await res.json();
-    // console.log(timer, power);
+  };
+  return getTodo();
+}
+
+function charge(amount, title, external_user_sub) {
+  let user_sub = JSON.parse(localStorage.getItem("user"));
+  let new_token = JSON.parse(localStorage.getItem("new_token"));
+  console.log({ amount, title });
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      user_sub,
+      new_token,
+      amount,
+      title,
+      external_user_sub
+    })
+  };
+  const url = "/cs_admin_api/charge_user";
+  const getTodo = async () => {
+    const res = await fetch(url, requestOptions);
+    const handle = await handleResponse(res);
+    return handle;
   };
   return getTodo();
 }
@@ -60,7 +72,6 @@ function handleResponse(response) {
       const error = (data && data.message) || response.statusText;
       return Promise.reject(error);
     }
-    console.log({ data });
     return data;
   });
 }

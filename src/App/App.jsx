@@ -45,26 +45,34 @@ class App extends React.Component {
   }
 
   render() {
+    const Formulage1 = {
+      backgroundColor: "#687F96",
+      height: "fit-content",
+      paddingTop: "10px",
+      paddingBottom: "10px",
+      marginBottom: "15px"
+    };
     const { alert } = this.props;
     const FixedHashRouter = withBaseFix(HashRouter);
+
     return (
       <FixedHashRouter history={history}>
         <div>
           <NavBar />
-          <div className="jumbotron">
-            <div className="container">
-              <div className="col-sm-8 col-sm-offset-2">
-                {alert.message && (
-                  <div className={`alert ${alert.type}`}>{alert.message}</div>
-                )}
-                <PrivateRoute exact path="/" component={HomePage} />
-                <Route path="/login" component={LoginPage} />
-                <Route path="/register" component={RegisterPage} />
-                <Route path="/wallet_page" component={WalletPage} />
-              </div>
-            </div>
+          <div className="container">
+            {/* <div style={Formulage1} className="jumbotron"> */}
+            {/* <div className="col-sm-8 col-sm-offset-2"> */}
+            {alert.message && (
+              <div className={`alert ${alert.type}`}>{alert.message}</div>
+            )}
+            <PrivateRoute exact path="/" component={HomePage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/register" component={RegisterPage} />
+            <PrivateRoute path="/wallet_page" component={WalletPage} />
           </div>
+          {/* </div> */}
         </div>
+        {/* </div> */}
       </FixedHashRouter>
     );
   }

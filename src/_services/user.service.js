@@ -17,7 +17,7 @@ function login(username, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
   };
-  const url = "/cs_admin_api/test_post_react";
+  const url = "/cs_admin_api/authenticate_user";
 
   return fetch(url, requestOptions)
     .then(handleResponse)
@@ -36,6 +36,7 @@ function login(username, password) {
 function logout() {
   // remove user from local storage to log user out
   localStorage.removeItem("user");
+  localStorage.removeItem("new_token");
 }
 
 function getAll() {

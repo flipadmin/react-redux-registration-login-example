@@ -1,12 +1,9 @@
 import { walletConstants } from "../_constants";
-import { userService } from "../_services";
 import { walletService } from "../_services";
-import { alertActions } from ".";
-import { history } from "../_helpers";
-import { wallet_lines } from "../_reducers/wallet.reducer";
 
 export const walletActions = {
-  get_lines
+  get_lines,
+  charge
 };
 
 function get_lines(external_id, company_id) {
@@ -16,39 +13,64 @@ function get_lines(external_id, company_id) {
     const wallet = async () => {
       try {
         const res = await walletService.get_lines(external_id, company_id);
-        console.log({ res });
-        const { new_token } = await res;
+        const { new_token, wallet_lines, external_user_sub } = await res;
         if (new_token) {
-          const succes = await dispatch(success(new_token));
+          await dispatch(success(wallet_lines, external_user_sub));
         }
       } catch (error) {
         console.log(error);
+        await dispatch(failure(error));
       }
     };
     wallet();
   };
-
-  // walletService.get_lines(external_id, company_id).then(
-  //   data => {
-  //     console.log("This is my LINES --------");
-  //     console.log(data);
-  //     dispatch(success(data));
-  //     history.push("/wallet_page");
-  //   },
-  //   error => {
-  //     dispatch(failure(error.toString()));
-  //     dispatch(alertActions.error(error.toString()));
-  //   }
-  // );
-  // };
-
   function request() {
     return { type: walletConstants.LINES_REQUEST };
   }
-  function success(data) {
-    return { type: walletConstants.LINES_SUCCESS, data };
+  function success(wallet_lines, external_user_sub) {
+    return {
+      type: walletConstants.LINES_SUCCESS,
+      wallet_lines,
+      external_user_sub
+    };
   }
   function failure(error) {
     return { type: walletConstants.LINES_FAILURE, error };
+  }
+}
+
+function charge(amount, title, external_user_sub) {
+  return dispatch => {
+    dispatch(request());
+
+    const wallet = async () => {
+      try {
+        const res = await walletService.charge(
+          amount,
+          title,
+          external_user_sub
+        );
+        const { new_token, wallet_lines } = await res;
+        if (new_token) {
+          await dispatch(success(wallet_lines));
+        }
+      } catch (error) {
+        console.log(error);
+        await dispatch(failure(error));
+      }
+    };
+    wallet();
+  };
+  function request() {
+    return { type: walletConstants.CHARGE_REQUEST };
+  }
+  function success(wallet_lines) {
+    return {
+      type: walletConstants.CHARGE_SUCCESS,
+      wallet_lines
+    };
+  }
+  function failure(error) {
+    return { type: walletConstants.CHARGE_FAILURE, error };
   }
 }

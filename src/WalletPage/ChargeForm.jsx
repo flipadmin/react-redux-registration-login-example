@@ -1,19 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from "react";
 import { connect } from "react-redux";
+import { walletActions } from "../_actions";
 
-import { userActions } from "../_actions";
-
-class LoginPage extends React.Component {
+class ChargeForm extends Component {
   constructor(props) {
     super(props);
 
-    // reset login status
-    this.props.dispatch(userActions.logout());
-
     this.state = {
-      username: "",
-      password: "",
+      amount: "",
+      title: "",
       submitted: false
     };
 
@@ -30,68 +25,73 @@ class LoginPage extends React.Component {
     e.preventDefault();
 
     this.setState({ submitted: true });
-    const { username, password } = this.state;
+    const { amount, title } = this.state;
     const { dispatch } = this.props;
-    if (username && password) {
-      dispatch(userActions.login(username, password));
-      // dispatch(userActions.test(username, password));
+    const { external_user_sub } = this.props;
+    if (amount && title) {
+      dispatch(walletActions.charge(amount, title, external_user_sub));
     }
   }
-
   render() {
     const Formulage1 = {
       backgroundColor: "#687F96",
-      height: "275px",
+      height: "fit-content",
       paddingTop: "10px",
       paddingBottom: "10px",
       marginBottom: "15px"
     };
-    const { loggingIn } = this.props;
-    const { username, password, submitted } = this.state;
+    const { chargingLines, items, external_user_sub } = this.props;
+    const { amount, title, submitted } = this.state;
     return (
       <div style={Formulage1} className="jumbotron">
-        <div className="col-md-6 col-md-offset-3">
-          <h2>Login</h2>
+        <div className="form-row">
           <form name="form" onSubmit={this.handleSubmit}>
             <div
               className={
-                "form-group" + (submitted && !username ? " has-error" : "")
+                "col col-md-5" + (submitted && !amount ? " has-error" : "")
               }
             >
-              <label htmlFor="username">Username</label>
+              <label htmlFor="amount" />
               <input
-                type="text"
+                type="number"
                 className="form-control"
-                name="username"
-                value={username}
+                name="amount"
+                value={amount}
+                placeholder="Charge external Uswer with AMOUNT"
                 onChange={this.handleChange}
               />
               {submitted &&
-                !username && (
-                  <div className="help-block">Username is required</div>
+                !amount && <div className="help-block">AMOUNT is required</div>}
+            </div>
+            <div
+              className={
+                "col col-md-5" + (submitted && !title ? " has-error" : "")
+              }
+            >
+              <label htmlFor="title" />
+              <input
+                type="text"
+                className="form-control"
+                name="title"
+                value={title}
+                placeholder="Title of operation"
+                onChange={this.handleChange}
+              />
+              {submitted &&
+                !title && (
+                  <div className="help-block">
+                    Title of operation is required
+                  </div>
                 )}
             </div>
             <div
               className={
-                "form-group" + (submitted && !password ? " has-error" : "")
+                "col col-md-5" + (submitted && !title ? " has-error" : "")
               }
-            >
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                value={password}
-                onChange={this.handleChange}
-              />
-              {submitted &&
-                !password && (
-                  <div className="help-block">Password is required</div>
-                )}
-            </div>
+            />
             <div className="form-group">
-              <button className="btn btn-primary">Login</button>
-              {loggingIn && (
+              <button className="btn btn-danger">Charge</button>
+              {chargingLines && (
                 <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
               )}
             </div>
@@ -103,11 +103,14 @@ class LoginPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { loggingIn } = state.authentication;
+  // const { wallet_lines } = state;
+  const { chargingLines, items, external_user_sub } = state.wallet_lines;
   return {
-    loggingIn
+    chargingLines,
+    items,
+    external_user_sub
   };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(LoginPage);
-export { connectedLoginPage as LoginPage };
+const connectedChargeForm = connect(mapStateToProps)(ChargeForm);
+export { connectedChargeForm as ChargeForm };

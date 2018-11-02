@@ -1,19 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { walletActions } from "../_actions";
 
-import { userActions } from "../_actions";
-
-class LoginPage extends React.Component {
+class ExternalUserForm extends React.Component {
   constructor(props) {
     super(props);
 
-    // reset login status
-    this.props.dispatch(userActions.logout());
-
     this.state = {
-      username: "",
-      password: "",
+      external_id: "",
+      company_id: "",
       submitted: false
     };
 
@@ -30,68 +25,71 @@ class LoginPage extends React.Component {
     e.preventDefault();
 
     this.setState({ submitted: true });
-    const { username, password } = this.state;
+    const { external_id, company_id } = this.state;
     const { dispatch } = this.props;
-    if (username && password) {
-      dispatch(userActions.login(username, password));
-      // dispatch(userActions.test(username, password));
+    if (external_id && company_id) {
+      dispatch(walletActions.get_lines(external_id, company_id));
     }
   }
 
   render() {
     const Formulage1 = {
       backgroundColor: "#687F96",
-      height: "275px",
+      height: "fit-content",
       paddingTop: "10px",
       paddingBottom: "10px",
       marginBottom: "15px"
     };
-    const { loggingIn } = this.props;
-    const { username, password, submitted } = this.state;
+    const { gettingLines, items } = this.props;
+    const { external_id, company_id, submitted } = this.state;
     return (
       <div style={Formulage1} className="jumbotron">
-        <div className="col-md-6 col-md-offset-3">
-          <h2>Login</h2>
+        <div className="form-row">
           <form name="form" onSubmit={this.handleSubmit}>
             <div
               className={
-                "form-group" + (submitted && !username ? " has-error" : "")
+                "col col-md-5" + (submitted && !external_id ? " has-error" : "")
               }
             >
-              <label htmlFor="username">Username</label>
+              <label htmlFor="external_id" />
               <input
                 type="text"
                 className="form-control"
-                name="username"
-                value={username}
+                name="external_id"
+                value={external_id}
+                placeholder="External User ID"
                 onChange={this.handleChange}
               />
               {submitted &&
-                !username && (
-                  <div className="help-block">Username is required</div>
+                !external_id && (
+                  <div className="help-block">External User ID is required</div>
                 )}
             </div>
             <div
               className={
-                "form-group" + (submitted && !password ? " has-error" : "")
+                "col col-md-5" + (submitted && !company_id ? " has-error" : "")
               }
             >
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
+              <label htmlFor="company_id" />
+              <select
                 className="form-control"
-                name="password"
-                value={password}
+                name="company_id"
+                value={company_id}
                 onChange={this.handleChange}
-              />
+              >
+                <option value="InitialRewards">InitialRewards</option>
+                <option value="RedZone">RedZone</option>
+                <option value="RewardsMatrix">RewardsMatrix</option>
+                <option value="SportNation">SportNation</option>
+              </select>
               {submitted &&
-                !password && (
-                  <div className="help-block">Password is required</div>
+                !company_id && (
+                  <div className="help-block">Company ID is required</div>
                 )}
             </div>
             <div className="form-group">
-              <button className="btn btn-primary">Login</button>
-              {loggingIn && (
+              <button className="btn btn-primary">Submit</button>
+              {gettingLines && (
                 <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
               )}
             </div>
@@ -103,11 +101,13 @@ class LoginPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { loggingIn } = state.authentication;
+  // const { wallet_lines } = state;
+  const { gettingLines, items } = state.wallet_lines;
   return {
-    loggingIn
+    gettingLines,
+    items
   };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(LoginPage);
-export { connectedLoginPage as LoginPage };
+const connectedExternalUserForm = connect(mapStateToProps)(ExternalUserForm);
+export { connectedExternalUserForm as ExternalUserForm };
