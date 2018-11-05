@@ -1,5 +1,6 @@
 import { walletConstants } from "../_constants";
 import { walletService } from "../_services";
+import { alertActions } from ".";
 
 export const walletActions = {
   get_lines,
@@ -18,8 +19,9 @@ function get_lines(external_id, company_id) {
           await dispatch(success(wallet_lines, external_user_sub));
         }
       } catch (error) {
-        console.log(error);
-        await dispatch(failure(error));
+        console.log({ error });
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error.toString()));
       }
     };
     wallet();
@@ -55,8 +57,8 @@ function charge(amount, title, external_user_sub) {
           await dispatch(success(wallet_lines));
         }
       } catch (error) {
-        console.log(error);
-        await dispatch(failure(error));
+        dispatch(failure(error));
+        dispatch(alertActions.error(error.toString()));
       }
     };
     wallet();

@@ -11,7 +11,6 @@ class ChargeForm extends Component {
       title: "",
       submitted: false
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -28,10 +27,28 @@ class ChargeForm extends Component {
     const { amount, title } = this.state;
     const { dispatch } = this.props;
     const { external_user_sub } = this.props;
-    if (amount && title) {
-      dispatch(walletActions.charge(amount, title, external_user_sub));
+    if (validateForm(amount, title)) {
+      bootbox.confirm({
+        message: `Charge User <b> ${external_user_sub} </b> with amount = <b> ${amount} </b><br> Are you sure?`,
+        buttons: {
+          confirm: {
+            label: "Yes",
+            className: "btn-success"
+          },
+          cancel: {
+            label: "No",
+            className: "btn-danger"
+          }
+        },
+        callback: function(result) {
+          if (result === true) {
+            dispatch(walletActions.charge(amount, title, external_user_sub));
+          }
+        }
+      });
     }
   }
+
   render() {
     const Formulage1 = {
       backgroundColor: "#687F96",
@@ -40,34 +57,27 @@ class ChargeForm extends Component {
       paddingBottom: "10px",
       marginBottom: "15px"
     };
+    const FormDiv = {
+      height: "fit-content"
+    };
     const { chargingLines, items, external_user_sub } = this.props;
     const { amount, title, submitted } = this.state;
     return (
       <div style={Formulage1} className="jumbotron">
         <div className="form-row">
-          <form name="form" onSubmit={this.handleSubmit}>
-            <div
-              className={
-                "col col-md-5" + (submitted && !amount ? " has-error" : "")
-              }
-            >
+          <form className="" onSubmit={this.handleSubmit}>
+            <div style={FormDiv} className="col col-md-5">
               <label htmlFor="amount" />
               <input
                 type="number"
-                className="form-control"
+                className="form-control "
                 name="amount"
                 value={amount}
-                placeholder="Charge external Uswer with AMOUNT"
+                placeholder="Charge external User with AMOUNT"
                 onChange={this.handleChange}
               />
-              {submitted &&
-                !amount && <div className="help-block">AMOUNT is required</div>}
             </div>
-            <div
-              className={
-                "col col-md-5" + (submitted && !title ? " has-error" : "")
-              }
-            >
+            <div style={FormDiv} className="col col-md-5">
               <label htmlFor="title" />
               <input
                 type="text"
@@ -77,28 +87,31 @@ class ChargeForm extends Component {
                 placeholder="Title of operation"
                 onChange={this.handleChange}
               />
-              {submitted &&
-                !title && (
-                  <div className="help-block">
-                    Title of operation is required
-                  </div>
-                )}
             </div>
-            <div
-              className={
-                "col col-md-5" + (submitted && !title ? " has-error" : "")
-              }
-            />
-            <div className="form-group">
-              <button className="btn btn-danger">Charge</button>
-              {chargingLines && (
-                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-              )}
-            </div>
+
+            <button className="btn btn-danger">Charge</button>
+            {chargingLines && (
+              <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+            )}
           </form>
         </div>
       </div>
     );
+  }
+}
+function validateForm(ex_amount, ex_title) {
+  let amount = ex_amount;
+  let title = ex_title;
+  if (amount === "") {
+    bootbox.alert("Please insert amount");
+  } else if (parseInt(amount) <= 0) {
+    bootbox.alert("Please insert positive amount");
+  } else if (amount.match(/^[0-9.]+$/) === null) {
+    bootbox.alert("Please insert amount in decimal");
+  } else if (title === "") {
+    bootbox.alert("Please insert title of operation");
+  } else {
+    return true;
   }
 }
 

@@ -4,15 +4,15 @@ import { connect } from "react-redux";
 
 class NavBar extends Component {
   render() {
-    const user = this.props.authentication.user;
-
+    let user =
+      this.props.authentication.user === undefined ? "Login" : "Logout";
     return (
       <nav className="navbar navbar-inverse">
-        <div className="container-fluid">
+        <div style={{ backgroundColor: "#193550" }} className="container-fluid">
           <div className="navbar-header">
             <p className="navbar-brand">CS-ADMIN</p>
           </div>
-          <ul className="nav navbar-nav navigation">
+          <ul className="nav navbar-nav navavigation">
             <li>
               <Link to="/">Home</Link>
             </li>
@@ -25,7 +25,11 @@ class NavBar extends Component {
           </ul>
           <ul className="nav navbar-nav navbar-right navigation">
             <li>
-              <Link to="/login">Login</Link>
+              <Link to="/login">
+                {" "}
+                <span className="glyphicon glyphicon-log-out" />
+                {user}
+              </Link>
             </li>
           </ul>
         </div>

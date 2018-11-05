@@ -17,12 +17,11 @@ function login(username, password) {
 
     userService.login(username, password).then(
       user => {
-        console.log("This is my USER --------");
-        console.log(user);
         dispatch(success(user));
         history.push("/");
       },
       error => {
+        console.log({ error });
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
       }

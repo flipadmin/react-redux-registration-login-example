@@ -11,8 +11,19 @@ class WalletPage extends React.Component {
       { key: "company_id", label: "COMPANY ID" },
       { key: "operation_date", label: "OPERATION DATE" },
       {
+        key: "operation_type",
+        label: "OT",
+        className: "text-center",
+        cell: function(items) {
+          return (
+            <span className="badge badge-light">{items.operation_type}</span>
+          );
+        }
+      },
+      {
         key: "operation_subtype",
         label: "OS",
+        className: "text-center",
         cell: function(items) {
           return (
             <span className="badge badge-light">{items.operation_subtype}</span>
@@ -20,19 +31,17 @@ class WalletPage extends React.Component {
         }
       },
       {
-        key: "operation_type",
-        label: "OT",
-        cell: function(items) {
-          return (
-            <span className="badge badge-light">{items.operation_type}</span>
-          );
-        }
-      },
-      { key: "src_title", label: "TITLE" },
-      {
         key: "src_transaction_id",
         label: "TRANSACTION ID",
         className: "text-center text-nowrap"
+      },
+      {
+        key: "src_title",
+        label: "TITLE",
+        className: "text-center",
+        cell: function(items) {
+          return <span className="text-center">{items.src_title}</span>;
+        }
       },
       { key: "balance_before", label: "BB" },
       { key: "amount_formatted", label: "AMOUNT" },
@@ -46,8 +55,8 @@ class WalletPage extends React.Component {
         <br />
         {items && (
           <JsonTable
-            className="table table-condensed table-hover"
-            headerClass="text text-centered"
+            theadClassName="text text-center"
+            className="table table-condensed table-hover text-center"
             rows={items}
             columns={columns}
           />

@@ -1,0 +1,57 @@
+.container {
+  padding-top: 20px;
+}
+.form-text {
+  color: black;
+}
+h2 {
+  margin: auto;
+  font-family: "Source Sans Pro", sans-serif !important;
+  vertical-align: middle;
+  text-align: center;
+  color: #193550;
+  font-weight: normal;
+}
+a {
+  color: #092036;
+}
+table {
+  background-color: white;
+  vertical-align: middle;
+}
+th {
+  font-size: 10pt;
+  font-family: Bitstream Vera Sans Mono, Monaco, Courier New, Courier, monospace;
+  vertical-align: middle;
+}
+td {
+  font-size: 7.5pt;
+  font-family: Bitstream Vera Sans Mono, Monaco, Courier New, Courier, monospace;
+  vertical-align: middle;
+}
+.amount {
+  background-color: rgba(0, 150, 0, 0.25);
+  text-align: right;
+}
+.balance {
+  background-color: rgba(0, 150, 0, 0.2);
+  text-align: right;
+}
+.amount-red {
+  background-color: rgba(150, 0, 0, 0.25);
+  text-align: right;
+}
+.balance-red {
+  background-color: rgba(150, 0, 0, 0.2);
+  text-align: right;
+}
+.badge {
+  background-color: #ecf0f1;
+  color: black;
+}
+.form-group {
+  margin-bottom: 10px;
+}
+.mcr-type {
+  background-color: lightgray;
+}
