@@ -3,7 +3,7 @@ import { Router, HashRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { history } from "../_helpers";
-import { alertActions } from "../_actions";
+import { alertActions, walletActions } from "../_actions";
 import { PrivateRoute } from "../_components";
 import { HomePage } from "../HomePage";
 import { LoginPage } from "../LoginPage";
@@ -39,19 +39,13 @@ class App extends React.Component {
 
     const { dispatch } = this.props;
     history.listen((location, action) => {
-      // clear alert on location change
+      // clear alert and wallet_lines on location change
       dispatch(alertActions.clear());
+      dispatch(walletActions.clear());
     });
   }
 
   render() {
-    const Formulage1 = {
-      backgroundColor: "#687F96",
-      height: "fit-content",
-      paddingTop: "10px",
-      paddingBottom: "10px",
-      marginBottom: "15px"
-    };
     const { alert } = this.props;
     const FixedHashRouter = withBaseFix(HashRouter);
 

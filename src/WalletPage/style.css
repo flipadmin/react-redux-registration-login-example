@@ -23,6 +23,8 @@ th {
   font-size: 10pt;
   font-family: Bitstream Vera Sans Mono, Monaco, Courier New, Courier, monospace;
   vertical-align: middle;
+  text-align: center;
+  background-color: #dddddd;
 }
 td {
   font-size: 7.5pt;

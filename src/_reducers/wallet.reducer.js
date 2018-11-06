@@ -8,7 +8,6 @@ export function wallet_lines(state = {}, action) {
       };
     case walletConstants.LINES_SUCCESS:
       return {
-        // lines: action.lines
         loaded: true,
         items: action.wallet_lines,
         external_user_sub: action.external_user_sub
@@ -25,6 +24,8 @@ export function wallet_lines(state = {}, action) {
       return {
         items: action.wallet_lines
       };
+    case walletConstants.LOCATION_CHANGE:
+      return {};
     default:
       return state;
   }

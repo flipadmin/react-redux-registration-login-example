@@ -2,17 +2,32 @@ import React from "react";
 import { connect } from "react-redux";
 import { ChargeForm } from "./ChargeForm";
 import { ExternalUserForm } from "./ExternalUserForm";
+import "./style.css";
 
 class WalletPage extends React.Component {
   render() {
     const { items } = this.props;
     const JsonTable = require("ts-react-json-table");
+    const settings = {
+      cellClass: function(current, key, item) {
+        if (key == "balance_after" || key == "balance_before") {
+          const amount_value =
+            item.amount_formatted > 0 ? " balance" : " balance-red";
+          return current + amount_value;
+        } else if (key == "amount_formatted") {
+          const amount_value =
+            item.amount_formatted > 0 ? " amount" : " amount-red";
+          return current + amount_value;
+        }
+      }
+    };
     const columns = [
       { key: "company_id", label: "COMPANY ID" },
       { key: "operation_date", label: "OPERATION DATE" },
       {
         key: "operation_type",
         label: "OT",
+        title: "OPERATION TYPE",
         className: "text-center",
         cell: function(items) {
           return (
@@ -22,7 +37,8 @@ class WalletPage extends React.Component {
       },
       {
         key: "operation_subtype",
-        label: "OS",
+        label: "ST",
+        title: "OPERATION SUBTYPE",
         className: "text-center",
         cell: function(items) {
           return (
@@ -38,27 +54,40 @@ class WalletPage extends React.Component {
       {
         key: "src_title",
         label: "TITLE",
-        className: "text-center",
-        cell: function(items) {
-          return <span className="text-center">{items.src_title}</span>;
-        }
+        className: "text-center"
       },
-      { key: "balance_before", label: "BB" },
+      {
+        key: "balance_before",
+        label: "BB",
+        title: "BALANCE BEFORE"
+        // className: "balance"
+        // cell: function(items) {
+        //   return <span className="balance">{items.balance_before}</span>;
+        // }
+      },
       { key: "amount_formatted", label: "AMOUNT" },
-      { key: "balance_after", label: "BA" }
+      {
+        key: "balance_after",
+        label: "BA",
+        title: "BALANCE AFTER"
+        // cellClass: function(current, key, item) {
+        //   return current + " balance";
+        // }
+      }
     ];
-    console.table({ items });
     return (
       <React.Fragment>
+        <div className="testing-style" />
         <ExternalUserForm />
         {items && <ChargeForm />}
         <br />
         {items && (
           <JsonTable
-            theadClassName="text text-center"
+            // theadClassName="text text-center"
             className="table table-condensed table-hover text-center"
             rows={items}
             columns={columns}
+            settings={settings}
           />
         )}
       </React.Fragment>
@@ -67,7 +96,6 @@ class WalletPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // const { wallet_lines } = state;
   const { items } = state.wallet_lines;
   return {
     items

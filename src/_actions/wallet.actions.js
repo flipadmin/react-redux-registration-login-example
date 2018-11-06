@@ -4,7 +4,8 @@ import { alertActions } from ".";
 
 export const walletActions = {
   get_lines,
-  charge
+  charge,
+  clear
 };
 
 function get_lines(external_id, company_id) {
@@ -75,4 +76,8 @@ function charge(amount, title, external_user_sub) {
   function failure(error) {
     return { type: walletConstants.CHARGE_FAILURE, error };
   }
+}
+
+function clear() {
+  return { type: walletConstants.LOCATION_CHANGE };
 }
